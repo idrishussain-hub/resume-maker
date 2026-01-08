@@ -1,0 +1,668 @@
+<a href="/resume/">Start Resume Builder</a>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idris | Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #0a0a0a;
+            color: #f5f5f5;
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Dark background with shadow effect */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(30, 30, 30, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(20, 20, 20, 0.6) 0%, transparent 50%),
+                radial-gradient(circle at 40% 80%, rgba(15, 15, 15, 0.7) 0%, transparent 50%);
+            background-color: #0a0a0a;
+        }
+
+        /* Subtle grid pattern overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        /* Status in top left with time next to it */
+        .status-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .status-text {
+            font-size: 0.9rem;
+            color: #4CAF50;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-time {
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 500;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-time i {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        /* Location in top right - with larger icon */
+        .location-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .location-text {
+            font-size: 0.9rem;
+            color: #888;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .location-icon {
+            color: #666;
+            font-size: 1rem; /* Made bigger */
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        /* Header section */
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        /* Name with strong emphasis */
+        .name {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 900;
+            margin-bottom: 15px;
+            letter-spacing: -0.02em;
+            background: linear-gradient(to right, #ffffff, #b0b0b0);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Tagline with typing animation */
+        .tagline {
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: -0.01em;
+            color: #d0d0d0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .tagline-text {
+            display: inline-block;
+        }
+
+        .cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background-color: #ffffff;
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Social icons */
+        .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: #d0d0d0;
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .social-icon:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Projects section */
+        .projects-section {
+            margin-top: 100px;
+            padding-top: 60px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .projects-heading {
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 50px;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            color: #ffffff;
+        }
+
+        /* Projects grid - single column for one project */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            max-width: 500px;
+            margin: 30px auto;
+            gap: 30px;
+        }
+
+        .project-card {
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-image {
+            height: 180px;
+            background-color: rgba(20, 20, 20, 0.5);
+            overflow: hidden;
+        }
+
+        .project-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            opacity: 0.7;
+        }
+
+        .project-card:hover .project-image img {
+            transform: scale(1.05);
+            opacity: 0.8;
+        }
+
+        .project-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .project-description {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #b0b0b0;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .tech-tag {
+            background-color: rgba(255, 255, 255, 0.07);
+            color: #d0d0d0;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 15px;
+            }
+            
+            .header {
+                margin-bottom: 60px;
+            }
+            
+            .tagline {
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            
+            .social-icons {
+                gap: 15px;
+            }
+            
+            .social-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 1.2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .projects-section {
+                margin-top: 80px;
+                padding-top: 50px;
+            }
+            
+            .status-container {
+                top: 15px;
+                left: 15px;
+                gap: 15px;
+            }
+            
+            .status-text, .status-time {
+                font-size: 0.8rem;
+            }
+            
+            .location-container {
+                top: 15px;
+                right: 15px;
+                gap: 8px;
+            }
+            
+            .location-text {
+                font-size: 0.8rem;
+            }
+            
+            .location-icon {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .name {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 1.2rem;
+                height: 40px;
+            }
+            
+            .projects-heading {
+                font-size: 1.5rem;
+            }
+            
+            .status-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .status-text, .status-time {
+                font-size: 0.75rem;
+            }
+            
+            .location-container {
+                flex-direction: column;
+                align-items: flex-end;
+                gap: 5px;
+            }
+            
+            .location-text {
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Footer with copyright only (time removed) */
+        .footer {
+            text-align: center;
+            margin-top: 100px;
+            padding: 30px 0;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .copyright-left {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.85rem;
+            color: #555;
+        }
+
+        .copyright-c {
+            font-size: 0.9rem;
+            color: #888;
+        }
+
+        .copyright-year {
+            color: #666;
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #a0a0a0;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 100;
+        }
+
+        .scroll-indicator:hover {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        /* Smooth scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Focus styles for accessibility */
+        *:focus {
+            outline: 2px solid rgba(255, 255, 255, 0.5);
+            outline-offset: 2px;
+        }
+
+        /* Selection color */
+        ::selection {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background elements -->
+    <div class="background-container"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- STATUS: ONLINE with time next to it (Left Top) -->
+    <div class="status-container">
+        <div class="status-text">STATUS : ONLINE</div>
+        <div class="status-time" id="top-time">
+            <i class="fas fa-clock"></i>
+            <span>Loading...</span>
+        </div>
+    </div>
+
+    <!-- Location with bigger icon (Right Top) -->
+    <div class="location-container">
+        <i class="fas fa-map-marker-alt location-icon"></i>
+        <div class="location-text">Merbok, Kedah</div>
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+        <!-- Header section -->
+        <header class="header">
+            <h1 class="name">Hey, I'm Idris.</h1>
+            <div class="tagline">
+                <span class="tagline-text" id="typed-text"></span>
+                <span class="cursor"></span>
+            </div>
+            
+            <!-- Social icons with YOUR links -->
+            <div class="social-icons">
+                <a href="https://www.linkedin.com/in/muhammad-idris-bin-hussain-26692b283?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" target="_blank" class="social-icon" aria-label="LinkedIn">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+                <a href="https://github.com/idrishussain-hub" target="_blank" class="social-icon" aria-label="GitHub">
+                    <i class="fab fa-github"></i>
+                </a>
+                <a href="https://www.instagram.com/idris_hussain__?igsh=MXFrOXBqeGozN2kxag==&utm_source=ig_contact_invite" target="_blank" class="social-icon" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="mailto:muhdidris342@gmail.com" class="social-icon" aria-label="Email">
+                    <i class="fas fa-envelope"></i>
+                </a>
+            </div>
+        </header>
+        
+        <!-- Projects section -->
+        <section class="projects-section" id="projects">
+            <h2 class="projects-heading">Personal projects</h2>
+            
+            <div class="projects-grid">
+                <!-- Single Project: Resume Builder -->
+                <a href="resume-maker.html" target="_blank" class="project-card">
+                    <div class="project-image">
+                        <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Resume Builder">
+                    </div>
+                    <div class="project-content">
+                        <h3 class="project-title">Resume Builder</h3>
+                        <p class="project-description">
+                            A free, ATS-friendly resume builder for the community. Create professional resumes in minutes with no sign-up required.
+                        </p>
+                        <div class="project-tech">
+                            <span class="tech-tag">HTML/CSS</span>
+                            <span class="tech-tag">JavaScript</span>
+                            <span class="tech-tag">No-Code</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </section>
+        
+        <!-- Footer (time removed from footer) -->
+        <footer class="footer">
+            <p>Built with passion for building cool things.</p>
+            
+            <div class="footer-bottom">
+                <!-- Copyright only in center -->
+                <div class="copyright-left">
+                    <div class="copyright-c">C</div>
+                    <div class="copyright-year">2026</div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Scroll to top indicator -->
+    <div class="scroll-indicator" id="scrollTop" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+    
+    <script>
+        // Typing animation for tagline
+        const taglineText = "Your friendly neighborhood IT guy";
+        const typedTextElement = document.getElementById('typed-text');
+        let charIndex = 0;
+        let isDeleting = false;
+        
+        function typeText() {
+            const currentText = taglineText.substring(0, charIndex);
+            typedTextElement.textContent = currentText;
+            
+            if (!isDeleting && charIndex < taglineText.length) {
+                // Typing forward
+                charIndex++;
+                setTimeout(typeText, 100);
+            } else if (isDeleting && charIndex > 0) {
+                // Deleting backward
+                charIndex--;
+                setTimeout(typeText, 50);
+            } else if (!isDeleting && charIndex === taglineText.length) {
+                // Pause at the end, then start deleting
+                setTimeout(() => {
+                    isDeleting = true;
+                    setTimeout(typeText, 1500);
+                }, 2000);
+            } else if (isDeleting && charIndex === 0) {
+                // Restart typing
+                isDeleting = false;
+                setTimeout(typeText, 500);
+            }
+        }
+        
+        // Initialize typing animation
+        setTimeout(typeText, 1000);
+        
+        // Function to update Malaysia Time with seconds (only for top time)
+        function updateMalaysiaTime() {
+            const now = new Date();
+            
+            // Convert to Malaysia Time (GMT+8)
+            const options = {
+                timeZone: 'Asia/Kuala_Lumpur',
+                hour12: true,
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            
+            const timeStr = now.toLocaleTimeString('en-MY', options);
+            
+            // Update only the top time
+            document.getElementById('top-time').querySelector('span').textContent = timeStr;
+        }
+        
+        // Update time immediately and then every second
+        updateMalaysiaTime();
+        setInterval(updateMalaysiaTime, 1000);
+        
+        // Scroll to top functionality
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.style.opacity = '1';
+                scrollTopBtn.style.visibility = 'visible';
+            } else {
+                scrollTopBtn.style.opacity = '0';
+                scrollTopBtn.style.visibility = 'hidden';
+            }
+        });
+        
+        scrollTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add subtle fade-in effect to main content
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(20px)';
+            container.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+            
+            setTimeout(() => {
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
