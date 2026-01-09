@@ -1150,6 +1150,27 @@
         .resume-builder-content::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.3);
         }
+
+        /* Completion message for skills section */
+        .completion-message {
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            color: #4CAF50;
+        }
+
+        .section-complete-btn {
+            background: #4CAF50 !important;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .section-complete-btn:hover {
+            background: #45a049 !important;
+        }
     </style>
 </head>
 <body>
@@ -1357,6 +1378,12 @@
                                 <label for="resumeCertifications">Certifications</label>
                                 <input type="text" id="resumeCertifications" value="AWS Certified Solutions Architect, Google Cloud Professional Data Engineer" placeholder="e.g., AWS Certified, PMP Certification">
                             </div>
+
+                            <!-- Completion message for Skills section -->
+                            <div class="completion-message" id="skillsCompletionMessage">
+                                <p><i class="fas fa-check-circle"></i> Skills section completed!</p>
+                                <p>You can now download your resume or go back to edit other sections.</p>
+                            </div>
                         </div>
 
                         <div class="resume-nav-buttons">
@@ -1455,6 +1482,7 @@
         const resumePrevBtn = document.getElementById('resumePrevBtn');
         const resumeNextBtn = document.getElementById('resumeNextBtn');
         const progressDots = document.querySelectorAll('.resume-progress-dot');
+        const skillsCompletionMessage = document.getElementById('skillsCompletionMessage');
         let currentResumeSection = 0;
 
         // Initialize the resume builder
@@ -1470,9 +1498,7 @@
             document.getElementById('resumeCertifications').value = resumeData.certifications;
             
             // Load skills
-            resumeData.skills.forEach(skill => {
-                addSkillTag(skill);
-            });
+            renderSkills();
             
             // Load experiences
             renderExperiences();
@@ -1482,6 +1508,9 @@
             
             // Update preview
             updateResumePreview();
+            
+            // Initially hide completion message
+            skillsCompletionMessage.style.display = 'none';
         }
 
         // Add skill tag
@@ -1802,11 +1831,17 @@
             resumePrevBtn.style.display = currentResumeSection === 0 ? 'none' : 'block';
             
             if (currentResumeSection === resumeSections.length - 1) {
-                resumeNextBtn.style.display = 'none';
-                updateResumePreview();
+                // This is the Skills section (last section)
+                resumeNextBtn.textContent = 'Done';
+                resumeNextBtn.style.display = 'block';
+                resumeNextBtn.classList.add('primary');
+                skillsCompletionMessage.style.display = 'block';
             } else {
+                // Other sections
                 resumeNextBtn.textContent = 'Next';
                 resumeNextBtn.style.display = 'block';
+                resumeNextBtn.classList.add('primary');
+                skillsCompletionMessage.style.display = 'none';
             }
             
             // Scroll to top of form panel
@@ -1818,6 +1853,9 @@
             if (currentResumeSection < resumeSections.length - 1) {
                 currentResumeSection++;
                 updateResumeProgress();
+            } else {
+                // When on Skills section and clicking "Done"
+                alert("You've completed all sections! You can now download your resume or go back to edit any section.");
             }
         }
 
