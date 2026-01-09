@@ -1,6 +1,3 @@
-<a href="/resume/">Start Resume Builder</a>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,6 +6,7 @@
     <title>Idris | Portfolio</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -53,6 +51,21 @@
             background-size: 50px 50px;
             z-index: -1;
             opacity: 0.3;
+        }
+
+        /* Top bar container for mobile */
+        .top-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 12px 15px;
+            background: rgba(10, 10, 10, 0.9);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: none;
         }
 
         /* Status in top left with time next to it */
@@ -108,7 +121,7 @@
 
         .location-icon {
             color: #666;
-            font-size: 1rem; /* Made bigger */
+            font-size: 1rem;
         }
 
         /* Main container */
@@ -125,12 +138,12 @@
         /* Header section */
         .header {
             text-align: center;
-            margin-bottom: 80px;
+            margin-bottom: 60px;
         }
 
         /* Name with strong emphasis */
         .name {
-            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-size: clamp(2rem, 5vw, 4rem);
             font-weight: 900;
             margin-bottom: 15px;
             letter-spacing: -0.02em;
@@ -139,11 +152,12 @@
             background-clip: text;
             color: transparent;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            line-height: 1.2;
         }
 
         /* Tagline with typing animation */
         .tagline {
-            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-size: clamp(1.2rem, 3vw, 2.5rem);
             font-weight: 600;
             margin-bottom: 30px;
             letter-spacing: -0.01em;
@@ -152,6 +166,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            text-align: center;
+            padding: 0 10px;
         }
 
         .tagline-text {
@@ -177,8 +193,9 @@
         .social-icons {
             display: flex;
             justify-content: center;
-            gap: 25px;
+            gap: 20px;
             margin-top: 40px;
+            flex-wrap: wrap;
         }
 
         .social-icon {
@@ -194,6 +211,7 @@
             text-decoration: none;
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
         }
 
         .social-icon:hover {
@@ -205,19 +223,20 @@
 
         /* Projects section */
         .projects-section {
-            margin-top: 100px;
+            margin-top: 80px;
             padding-top: 60px;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .projects-heading {
-            font-size: 1.8rem;
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
             font-weight: 700;
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
             letter-spacing: 0.02em;
             text-transform: uppercase;
             color: #ffffff;
+            line-height: 1.3;
         }
 
         /* Projects grid - single column for one project */
@@ -225,7 +244,7 @@
             display: grid;
             grid-template-columns: 1fr;
             max-width: 500px;
-            margin: 30px auto;
+            margin: 20px auto;
             gap: 30px;
         }
 
@@ -270,7 +289,7 @@
         }
 
         .project-content {
-            padding: 25px;
+            padding: 20px;
             flex-grow: 1;
             display: flex;
             flex-direction: column;
@@ -281,6 +300,7 @@
             font-weight: 700;
             margin-bottom: 10px;
             color: #ffffff;
+            line-height: 1.3;
         }
 
         .project-description {
@@ -307,19 +327,94 @@
             font-weight: 500;
         }
 
-        /* Responsive design */
+        /* Resume Builder Styles (Added from second code) */
+        .resume-builder-container {
+            display: none;
+            background: #1a1a1a;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .resume-builder-header {
+            background: #2a2a2a;
+            padding: 25px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .resume-builder-header h2 {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .resume-builder-header p {
+            color: #b0b0b0;
+            font-size: 0.95rem;
+        }
+
+        .resume-builder-content {
+            padding: 25px;
+        }
+
+        .close-resume-builder {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: #888;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close-resume-builder:hover {
+            color: #ffffff;
+        }
+
+        /* Responsive design - MOBILE FIRST */
         @media (max-width: 768px) {
+            .top-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .status-container, .location-container {
+                position: static;
+                gap: 10px;
+            }
+            
+            .status-text, .status-time, .location-text {
+                font-size: 0.8rem;
+            }
+            
+            .status-time i, .location-icon {
+                font-size: 0.9rem;
+            }
+            
             .container {
-                padding: 30px 15px;
+                padding: 80px 15px 30px;
             }
             
             .header {
-                margin-bottom: 60px;
+                margin-bottom: 40px;
+            }
+            
+            .name {
+                font-size: 2.2rem;
             }
             
             .tagline {
-                height: 50px;
+                height: auto;
+                min-height: 50px;
                 font-size: 1.3rem;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
             }
             
             .social-icons {
@@ -332,80 +427,109 @@
                 font-size: 1.2rem;
             }
             
-            .projects-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
-            }
-            
             .projects-section {
-                margin-top: 80px;
-                padding-top: 50px;
+                margin-top: 60px;
+                padding-top: 40px;
             }
             
-            .status-container {
-                top: 15px;
-                left: 15px;
-                gap: 15px;
+            .projects-heading {
+                margin-bottom: 30px;
             }
             
-            .status-text, .status-time {
-                font-size: 0.8rem;
+            .projects-grid {
+                gap: 20px;
+                padding: 0 10px;
             }
             
-            .location-container {
-                top: 15px;
-                right: 15px;
-                gap: 8px;
+            .project-image {
+                height: 150px;
             }
             
-            .location-text {
-                font-size: 0.8rem;
+            .project-content {
+                padding: 15px;
             }
             
-            .location-icon {
-                font-size: 0.9rem;
+            .resume-builder-container {
+                margin: 20px 10px;
+            }
+            
+            .resume-builder-header {
+                padding: 20px;
+            }
+            
+            .resume-builder-content {
+                padding: 20px;
             }
         }
 
         @media (max-width: 480px) {
+            .container {
+                padding: 70px 10px 20px;
+            }
+            
             .name {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
             
             .tagline {
-                font-size: 1.2rem;
-                height: 40px;
+                font-size: 1.1rem;
+                min-height: 40px;
             }
             
             .projects-heading {
-                font-size: 1.5rem;
+                font-size: 1.3rem;
             }
             
-            .status-container {
-                flex-direction: column;
-                align-items: flex-start;
+            .project-title {
+                font-size: 1.2rem;
+            }
+            
+            .project-description {
+                font-size: 0.9rem;
+            }
+            
+            .status-container, .location-container {
                 gap: 5px;
             }
             
-            .status-text, .status-time {
+            .status-text, .status-time, .location-text {
                 font-size: 0.75rem;
             }
             
-            .location-container {
-                flex-direction: column;
-                align-items: flex-end;
-                gap: 5px;
+            .top-bar {
+                padding: 10px 12px;
+            }
+        }
+
+        /* Extra small phones */
+        @media (max-width: 360px) {
+            .name {
+                font-size: 1.6rem;
             }
             
-            .location-text {
-                font-size: 0.75rem;
+            .tagline {
+                font-size: 1rem;
+            }
+            
+            .social-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+            
+            .project-image {
+                height: 130px;
+            }
+            
+            .projects-grid {
+                padding: 0 5px;
             }
         }
 
         /* Footer with copyright only (time removed) */
         .footer {
             text-align: center;
-            margin-top: 100px;
+            margin-top: 80px;
             padding: 30px 0;
             color: #666;
             font-size: 0.9rem;
@@ -442,9 +566,9 @@
         .scroll-indicator {
             position: fixed;
             bottom: 20px;
-            left: 20px;
-            width: 40px;
-            height: 40px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
             background-color: rgba(255, 255, 255, 0.1);
             border-radius: 50%;
             display: flex;
@@ -456,6 +580,13 @@
             transition: all 0.3s ease;
             border: 1px solid rgba(255, 255, 255, 0.1);
             z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .scroll-indicator.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
         .scroll-indicator:hover {
@@ -463,9 +594,365 @@
             color: #ffffff;
         }
 
+        /* Touch-friendly button sizing for mobile */
+        @media (max-width: 768px) {
+            .scroll-indicator {
+                width: 45px;
+                height: 45px;
+                bottom: 15px;
+                right: 15px;
+            }
+            
+            /* Ensure touch targets are at least 44px */
+            .social-icon, .project-card {
+                min-height: 44px;
+            }
+        }
+
+        /* Resume Builder Specific Styles */
+        .resume-main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 1024px) {
+            .resume-main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .resume-form-panel {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .resume-preview-panel {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .resume-section {
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .resume-section.active {
+            display: block;
+        }
+
+        .resume-section-title {
+            font-size: 1.3rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .resume-form-group {
+            margin-bottom: 20px;
+        }
+
+        .resume-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .resume-form-group input,
+        .resume-form-group textarea {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .resume-form-group input:focus,
+        .resume-form-group textarea:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        .resume-form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .resume-form-row .resume-form-group {
+            flex: 1;
+        }
+
+        .resume-nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .resume-nav-btn {
+            padding: 12px 24px;
+            background: #333;
+            color: #ffffff;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .resume-nav-btn:hover {
+            background: #444;
+        }
+
+        .resume-nav-btn.primary {
+            background: #4CAF50;
+        }
+
+        .resume-nav-btn.primary:hover {
+            background: #45a049;
+        }
+
+        .resume-avatar-upload {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 12px;
+            border: 2px dashed rgba(255, 255, 255, 0.1);
+        }
+
+        .resume-avatar-preview {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: #888;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .resume-avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .resume-upload-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .resume-remove-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .resume-add-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: #333;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .resume-add-btn:hover {
+            background: #444;
+        }
+
+        /* Resume Preview Styles */
+        .resume-preview-content {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 11pt;
+            color: #000;
+            line-height: 1.4;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+        }
+
+        .resume-preview-header {
+            border-bottom: 2px solid #000;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .resume-preview-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #000;
+            flex-shrink: 0;
+        }
+
+        .resume-preview-name {
+            font-size: 22pt;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #000;
+        }
+
+        .resume-preview-title {
+            font-size: 13pt;
+            color: #333;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .resume-preview-contact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 10pt;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .resume-preview-section {
+            margin-bottom: 20px;
+        }
+
+        .resume-preview-section-title {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #000;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #000;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .resume-preview-item {
+            margin-bottom: 15px;
+        }
+
+        .resume-preview-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 5px;
+        }
+
+        .resume-preview-item-title {
+            font-weight: bold;
+            font-size: 11pt;
+            color: #000;
+        }
+
+        .resume-preview-item-date {
+            color: #666;
+            font-style: italic;
+            font-size: 10pt;
+        }
+
+        .resume-preview-item-subtitle {
+            color: #444;
+            margin-bottom: 8px;
+            font-size: 10.5pt;
+            font-weight: 500;
+        }
+
+        .resume-preview-skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .resume-preview-skill-tag {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 3px;
+            font-size: 9.5pt;
+            border: 1px solid #ddd;
+        }
+
+        /* Loading Overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
         /* Smooth scroll behavior */
         html {
             scroll-behavior: smooth;
+        }
+
+        /* Prevent text size adjustment on mobile */
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
+        /* Improve tap highlight on mobile */
+        a, button, .social-icon, .project-card {
+            -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
         }
 
         /* Focus styles for accessibility */
@@ -479,6 +966,12 @@
             background-color: rgba(255, 255, 255, 0.2);
             color: #ffffff;
         }
+
+        /* Prevent horizontal scroll */
+        body {
+            overflow-x: hidden;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -486,17 +979,32 @@
     <div class="background-container"></div>
     <div class="grid-overlay"></div>
 
-    <!-- STATUS: ONLINE with time next to it (Left Top) -->
-    <div class="status-container">
+    <!-- Mobile top bar (shown only on mobile) -->
+    <div class="top-bar">
+        <div class="status-container">
+            <div class="status-text">STATUS : ONLINE</div>
+            <div class="status-time" id="top-time-mobile">
+                <i class="fas fa-clock"></i>
+                <span>Loading...</span>
+            </div>
+        </div>
+        
+        <div class="location-container">
+            <i class="fas fa-map-marker-alt location-icon"></i>
+            <div class="location-text">Merbok, Kedah</div>
+        </div>
+    </div>
+
+    <!-- Desktop status and location (hidden on mobile) -->
+    <div class="status-container desktop-only">
         <div class="status-text">STATUS : ONLINE</div>
-        <div class="status-time" id="top-time">
+        <div class="status-time" id="top-time-desktop">
             <i class="fas fa-clock"></i>
             <span>Loading...</span>
         </div>
     </div>
 
-    <!-- Location with bigger icon (Right Top) -->
-    <div class="location-container">
+    <div class="location-container desktop-only">
         <i class="fas fa-map-marker-alt location-icon"></i>
         <div class="location-text">Merbok, Kedah</div>
     </div>
@@ -534,7 +1042,7 @@
             
             <div class="projects-grid">
                 <!-- Single Project: Resume Builder -->
-                <a href="resume-maker.html" target="_blank" class="project-card">
+                <a href="javascript:void(0);" class="project-card" id="openResumeBuilder">
                     <div class="project-image">
                         <img src="https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=774&q=80" alt="Resume Builder">
                     </div>
@@ -553,7 +1061,181 @@
             </div>
         </section>
         
-        <!-- Footer (time removed from footer) -->
+        <!-- Resume Builder Section (Hidden by default) -->
+        <div class="resume-builder-container" id="resumeBuilder">
+            <button class="close-resume-builder" id="closeResumeBuilder">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="resume-builder-header">
+                <h2>Resume Builder</h2>
+                <p>Create a professional ATS-friendly resume in minutes. Fill in your details and download as PDF.</p>
+            </div>
+            
+            <div class="resume-builder-content">
+                <div class="resume-main-grid">
+                    <!-- Form Panel -->
+                    <div class="resume-form-panel">
+                        <div class="resume-section active" id="resumePersonalSection">
+                            <h3 class="resume-section-title">Personal Information</h3>
+                            
+                            <!-- Avatar Upload -->
+                            <div class="resume-avatar-upload">
+                                <div class="resume-avatar-preview" id="resumeProfilePicture">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <label class="resume-upload-btn">
+                                        <i class="fas fa-camera"></i>
+                                        Upload Photo
+                                        <input type="file" id="resumePictureUpload" accept="image/*" style="display: none;">
+                                    </label>
+                                    <button class="resume-remove-btn" id="resumeRemovePicture" style="display: none;">
+                                        <i class="fas fa-times"></i>
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="resume-form-group">
+                                <label for="resumeFullName">Full Name</label>
+                                <input type="text" id="resumeFullName" placeholder="John Doe" value="Alexandra Chen">
+                            </div>
+                            
+                            <div class="resume-form-row">
+                                <div class="resume-form-group">
+                                    <label for="resumeJobTitle">Professional Title</label>
+                                    <input type="text" id="resumeJobTitle" placeholder="Software Developer" value="Senior Software Engineer">
+                                </div>
+                                <div class="resume-form-group">
+                                    <label for="resumeLocation">Location</label>
+                                    <input type="text" id="resumeLocation" placeholder="New York, NY" value="San Francisco, CA">
+                                </div>
+                            </div>
+                            
+                            <div class="resume-form-row">
+                                <div class="resume-form-group">
+                                    <label for="resumeEmail">Email Address</label>
+                                    <input type="email" id="resumeEmail" placeholder="john.doe@example.com" value="alex.chen@example.com">
+                                </div>
+                                <div class="resume-form-group">
+                                    <label for="resumePhone">Phone Number</label>
+                                    <input type="tel" id="resumePhone" placeholder="(123) 456-7890" value="(415) 123-4567">
+                                </div>
+                            </div>
+                            
+                            <div class="resume-form-group">
+                                <label for="resumeSummary">Professional Summary</label>
+                                <textarea id="resumeSummary" rows="4">Senior Software Engineer with 8+ years of experience designing and implementing scalable software solutions. Proven track record of leading cross-functional teams to deliver high-quality products.</textarea>
+                            </div>
+                        </div>
+
+                        <div class="resume-section" id="resumeExperienceSection">
+                            <h3 class="resume-section-title">Work Experience</h3>
+                            <div id="resumeExperienceContainer">
+                                <div class="resume-form-group">
+                                    <label for="resumeJobTitle1">Job Title</label>
+                                    <input type="text" id="resumeJobTitle1" value="Senior Software Engineer">
+                                </div>
+                                <div class="resume-form-group">
+                                    <label for="resumeCompany1">Company</label>
+                                    <input type="text" id="resumeCompany1" value="Amazon Web Services">
+                                </div>
+                                <div class="resume-form-row">
+                                    <div class="resume-form-group">
+                                        <label for="resumeStartDate1">Start Date</label>
+                                        <input type="text" id="resumeStartDate1" value="June 2019">
+                                    </div>
+                                    <div class="resume-form-group">
+                                        <label for="resumeEndDate1">End Date</label>
+                                        <input type="text" id="resumeEndDate1" value="Present">
+                                    </div>
+                                </div>
+                                <div class="resume-form-group">
+                                    <label for="resumeDescription1">Responsibilities & Achievements</label>
+                                    <textarea id="resumeDescription1" rows="4">• Led a team of 6 developers in designing microservices architecture
+• Improved system performance by 40% through optimization
+• Reduced deployment time by 60% with CI/CD pipeline
+• Mentored 3 junior developers, improving team productivity by 25%</textarea>
+                                </div>
+                            </div>
+                            <button class="resume-add-btn" id="resumeAddExperience">
+                                <i class="fas fa-plus"></i>
+                                Add Experience
+                            </button>
+                        </div>
+
+                        <div class="resume-section" id="resumeEducationSection">
+                            <h3 class="resume-section-title">Education</h3>
+                            <div id="resumeEducationContainer">
+                                <div class="resume-form-group">
+                                    <label for="resumeDegree1">Degree</label>
+                                    <input type="text" id="resumeDegree1" value="Master of Science in Computer Science">
+                                </div>
+                                <div class="resume-form-group">
+                                    <label for="resumeInstitution1">Institution</label>
+                                    <input type="text" id="resumeInstitution1" value="University of Washington">
+                                </div>
+                                <div class="resume-form-row">
+                                    <div class="resume-form-group">
+                                        <label for="resumeGradYear1">Graduation Year</label>
+                                        <input type="text" id="resumeGradYear1" value="2015">
+                                    </div>
+                                    <div class="resume-form-group">
+                                        <label for="resumeGpa1">GPA</label>
+                                        <input type="text" id="resumeGpa1" value="3.8">
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="resume-add-btn" id="resumeAddEducation">
+                                <i class="fas fa-plus"></i>
+                                Add Education
+                            </button>
+                        </div>
+
+                        <div class="resume-section" id="resumeSkillsSection">
+                            <h3 class="resume-section-title">Skills</h3>
+                            <div class="resume-form-group">
+                                <label for="resumeSkills">Technical Skills</label>
+                                <input type="text" id="resumeSkills" value="Java, Python, JavaScript, React, AWS, Docker, Kubernetes, PostgreSQL, Git, Agile Methodologies">
+                            </div>
+                            <div class="resume-form-group">
+                                <label for="resumeLanguages">Languages</label>
+                                <input type="text" id="resumeLanguages" value="English (Native), Mandarin (Fluent), Spanish (Conversational)">
+                            </div>
+                            <div class="resume-form-group">
+                                <label for="resumeCertifications">Certifications</label>
+                                <input type="text" id="resumeCertifications" value="AWS Certified Solutions Architect, Google Cloud Professional Data Engineer">
+                            </div>
+                        </div>
+
+                        <div class="resume-nav-buttons">
+                            <button class="resume-nav-btn" id="resumePrevBtn">Previous</button>
+                            <button class="resume-nav-btn primary" id="resumeNextBtn">Next</button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Panel -->
+                    <div class="resume-preview-panel">
+                        <h3 class="resume-section-title">Preview</h3>
+                        <div class="resume-preview-content" id="resumePreview">
+                            <!-- Preview will be generated here -->
+                        </div>
+                        <div style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="resume-nav-btn primary" id="resumeExportPDF" style="flex: 1;">
+                                <i class="fas fa-file-pdf"></i>
+                                Download PDF
+                            </button>
+                            <button class="resume-nav-btn" id="resumeExportPrint" style="flex: 1;">
+                                <i class="fas fa-print"></i>
+                                Print
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
         <footer class="footer">
             <p>Built with passion for building cool things.</p>
             
@@ -565,6 +1247,12 @@
                 </div>
             </div>
         </footer>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <p style="color: white; margin-top: 20px;">Generating PDF...</p>
     </div>
     
     <!-- Scroll to top indicator -->
@@ -607,7 +1295,7 @@
         // Initialize typing animation
         setTimeout(typeText, 1000);
         
-        // Function to update Malaysia Time with seconds (only for top time)
+        // Function to update Malaysia Time with seconds
         function updateMalaysiaTime() {
             const now = new Date();
             
@@ -622,8 +1310,16 @@
             
             const timeStr = now.toLocaleTimeString('en-MY', options);
             
-            // Update only the top time
-            document.getElementById('top-time').querySelector('span').textContent = timeStr;
+            // Update both desktop and mobile times
+            const desktopTime = document.getElementById('top-time-desktop');
+            const mobileTime = document.getElementById('top-time-mobile');
+            
+            if (desktopTime) {
+                desktopTime.querySelector('span').textContent = timeStr;
+            }
+            if (mobileTime) {
+                mobileTime.querySelector('span').textContent = timeStr;
+            }
         }
         
         // Update time immediately and then every second
@@ -635,11 +1331,9 @@
         
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
-                scrollTopBtn.style.opacity = '1';
-                scrollTopBtn.style.visibility = 'visible';
+                scrollTopBtn.classList.add('visible');
             } else {
-                scrollTopBtn.style.opacity = '0';
-                scrollTopBtn.style.visibility = 'hidden';
+                scrollTopBtn.classList.remove('visible');
             }
         });
         
@@ -650,8 +1344,262 @@
             });
         });
         
+        // Mobile-specific optimizations
+        function detectMobile() {
+            return window.innerWidth <= 768;
+        }
+        
+        // Handle mobile layout adjustments
+        function handleMobileLayout() {
+            if (detectMobile()) {
+                // Hide desktop status/location containers on mobile
+                document.querySelectorAll('.desktop-only').forEach(el => {
+                    el.style.display = 'none';
+                });
+                // Show mobile top bar
+                document.querySelector('.top-bar').style.display = 'flex';
+            } else {
+                // Show desktop containers on larger screens
+                document.querySelectorAll('.desktop-only').forEach(el => {
+                    el.style.display = 'flex';
+                });
+                // Hide mobile top bar
+                document.querySelector('.top-bar').style.display = 'none';
+            }
+        }
+        
+        // Resume Builder Functionality
+        const resumeBuilder = document.getElementById('resumeBuilder');
+        const openResumeBuilderBtn = document.getElementById('openResumeBuilder');
+        const closeResumeBuilderBtn = document.getElementById('closeResumeBuilder');
+        
+        // Resume sections and navigation
+        const resumeSections = document.querySelectorAll('.resume-section');
+        const resumePrevBtn = document.getElementById('resumePrevBtn');
+        const resumeNextBtn = document.getElementById('resumeNextBtn');
+        let currentResumeSection = 0;
+        
+        // Resume data
+        let resumeProfilePictureData = null;
+        
+        // Update resume progress
+        function updateResumeProgress() {
+            // Hide all sections
+            resumeSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show current section
+            resumeSections[currentResumeSection].classList.add('active');
+            
+            // Update navigation buttons
+            resumePrevBtn.style.display = currentResumeSection === 0 ? 'none' : 'block';
+            
+            if (currentResumeSection === resumeSections.length - 1) {
+                resumeNextBtn.style.display = 'none';
+                updateResumePreview();
+            } else {
+                resumeNextBtn.textContent = 'Next';
+                resumeNextBtn.style.display = 'block';
+            }
+        }
+        
+        // Resume navigation
+        function resumeNextSection() {
+            if (currentResumeSection < resumeSections.length - 1) {
+                currentResumeSection++;
+                updateResumeProgress();
+            }
+        }
+        
+        function resumePrevSection() {
+            if (currentResumeSection > 0) {
+                currentResumeSection--;
+                updateResumeProgress();
+            }
+        }
+        
+        // Resume picture upload
+        document.getElementById('resumePictureUpload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            if (!file.type.match('image.*')) {
+                alert('Please select an image file');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                resumeProfilePictureData = e.target.result;
+                document.getElementById('resumeProfilePicture').innerHTML = `<img src="${resumeProfilePictureData}" alt="Profile Picture">`;
+                document.getElementById('resumeRemovePicture').style.display = 'inline-block';
+                updateResumePreview();
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        document.getElementById('resumeRemovePicture').addEventListener('click', function() {
+            resumeProfilePictureData = null;
+            document.getElementById('resumeProfilePicture').innerHTML = '<i class="fas fa-user"></i>';
+            this.style.display = 'none';
+            document.getElementById('resumePictureUpload').value = '';
+            updateResumePreview();
+        });
+        
+        // Update resume preview
+        function updateResumePreview() {
+            const fullName = document.getElementById('resumeFullName').value || 'Your Name';
+            const jobTitle = document.getElementById('resumeJobTitle').value || 'Professional Title';
+            const location = document.getElementById('resumeLocation').value || 'City, State';
+            const email = document.getElementById('resumeEmail').value || 'email@example.com';
+            const phone = document.getElementById('resumePhone').value || '(123) 456-7890';
+            const summary = document.getElementById('resumeSummary').value || 'Professional summary...';
+            
+            const skills = document.getElementById('resumeSkills').value || '';
+            const languages = document.getElementById('resumeLanguages').value || '';
+            const certifications = document.getElementById('resumeCertifications').value || '';
+            
+            // Build preview HTML
+            let previewHTML = `
+                <div class="resume-preview-header">
+                    ${resumeProfilePictureData ? `<img src="${resumeProfilePictureData}" class="resume-preview-avatar" alt="Profile">` : ''}
+                    <div>
+                        <h1 class="resume-preview-name">${fullName}</h1>
+                        <div class="resume-preview-title">${jobTitle}</div>
+                        <div class="resume-preview-contact">
+                            <div>${location}</div>
+                            <div>${email}</div>
+                            <div>${phone}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resume-preview-section">
+                    <h3 class="resume-preview-section-title">Summary</h3>
+                    <p>${summary}</p>
+                </div>
+                
+                <div class="resume-preview-section">
+                    <h3 class="resume-preview-section-title">Experience</h3>
+                    <div class="resume-preview-item">
+                        <div class="resume-preview-item-header">
+                            <div class="resume-preview-item-title">${document.getElementById('resumeJobTitle1').value || 'Job Title'}</div>
+                            <div class="resume-preview-item-date">${document.getElementById('resumeStartDate1').value || 'Start'} – ${document.getElementById('resumeEndDate1').value || 'Present'}</div>
+                        </div>
+                        <div class="resume-preview-item-subtitle">${document.getElementById('resumeCompany1').value || 'Company'}</div>
+                        <p>${document.getElementById('resumeDescription1').value.replace(/\n/g, '<br>')}</p>
+                    </div>
+                </div>
+                
+                <div class="resume-preview-section">
+                    <h3 class="resume-preview-section-title">Education</h3>
+                    <div class="resume-preview-item">
+                        <div class="resume-preview-item-header">
+                            <div class="resume-preview-item-title">${document.getElementById('resumeDegree1').value || 'Degree'}</div>
+                            <div class="resume-preview-item-date">${document.getElementById('resumeGradYear1').value || 'Year'}</div>
+                        </div>
+                        <div class="resume-preview-item-subtitle">${document.getElementById('resumeInstitution1').value || 'Institution'}${document.getElementById('resumeGpa1').value ? ` | GPA: ${document.getElementById('resumeGpa1').value}` : ''}</div>
+                    </div>
+                </div>
+            `;
+            
+            if (skills) {
+                previewHTML += `
+                    <div class="resume-preview-section">
+                        <h3 class="resume-preview-section-title">Skills</h3>
+                        <div class="resume-preview-skills">
+                            ${skills.split(',').map(skill => `<span class="resume-preview-skill-tag">${skill.trim()}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (languages) {
+                previewHTML += `
+                    <div class="resume-preview-section">
+                        <h3 class="resume-preview-section-title">Languages</h3>
+                        <p>${languages}</p>
+                    </div>
+                `;
+            }
+            
+            if (certifications) {
+                previewHTML += `
+                    <div class="resume-preview-section">
+                        <h3 class="resume-preview-section-title">Certifications</h3>
+                        <p>${certifications}</p>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('resumePreview').innerHTML = previewHTML;
+        }
+        
+        // Export PDF
+        document.getElementById('resumeExportPDF').addEventListener('click', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            const element = document.getElementById('resumePreview');
+            const clone = element.cloneNode(true);
+            
+            const opt = {
+                margin: [10, 10, 10, 10],
+                filename: 'resume.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff'
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                }
+            };
+            
+            setTimeout(() => {
+                html2pdf().set(opt).from(clone).save().then(() => {
+                    loadingOverlay.style.display = 'none';
+                }).catch(err => {
+                    console.error(err);
+                    loadingOverlay.style.display = 'none';
+                    alert('Failed to generate PDF. Please try printing instead.');
+                });
+            }, 500);
+        });
+        
+        // Print resume
+        document.getElementById('resumeExportPrint').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // Add experience/education
+        document.getElementById('resumeAddExperience').addEventListener('click', function() {
+            alert('Add experience functionality would go here');
+        });
+        
+        document.getElementById('resumeAddEducation').addEventListener('click', function() {
+            alert('Add education functionality would go here');
+        });
+        
+        // Input event listeners for real-time preview updates
+        document.querySelectorAll('#resumePersonalSection input, #resumePersonalSection textarea, #resumeExperienceSection input, #resumeExperienceSection textarea, #resumeEducationSection input, #resumeSkillsSection input').forEach(input => {
+            input.addEventListener('input', updateResumePreview);
+        });
+        
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
+            // Handle mobile/desktop layout
+            handleMobileLayout();
+            window.addEventListener('resize', handleMobileLayout);
+            
+            // Initialize resume builder
+            updateResumeProgress();
+            updateResumePreview();
+            
             // Add subtle fade-in effect to main content
             const container = document.querySelector('.container');
             container.style.opacity = '0';
@@ -662,6 +1610,53 @@
                 container.style.opacity = '1';
                 container.style.transform = 'translateY(0)';
             }, 300);
+            
+            // Resume builder event listeners
+            resumePrevBtn.addEventListener('click', resumePrevSection);
+            resumeNextBtn.addEventListener('click', resumeNextSection);
+            
+            openResumeBuilderBtn.addEventListener('click', function() {
+                resumeBuilder.style.display = 'block';
+                window.scrollTo({
+                    top: resumeBuilder.offsetTop - 20,
+                    behavior: 'smooth'
+                });
+            });
+            
+            closeResumeBuilderBtn.addEventListener('click', function() {
+                resumeBuilder.style.display = 'none';
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Improve mobile touch experience
+            if (detectMobile()) {
+                // Prevent zoom on double-tap
+                document.addEventListener('touchstart', function(event) {
+                    if (event.touches.length > 1) {
+                        event.preventDefault();
+                    }
+                }, { passive: false });
+                
+                // Improve button responsiveness
+                document.querySelectorAll('a, button, .social-icon, .project-card').forEach(el => {
+                    el.addEventListener('touchstart', function() {
+                        this.style.transform = 'scale(0.98)';
+                    });
+                    el.addEventListener('touchend', function() {
+                        this.style.transform = '';
+                    });
+                });
+            }
+        });
+        
+        // Prevent context menu on mobile for better UX
+        document.addEventListener('contextmenu', function(e) {
+            if (detectMobile()) {
+                e.preventDefault();
+            }
         });
     </script>
 </body>
