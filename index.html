@@ -327,7 +327,7 @@
             font-weight: 500;
         }
 
-        /* Resume Builder Styles (Added from second code) */
+        /* Resume Builder Styles */
         .resume-builder-container {
             display: none;
             background: #1a1a1a;
@@ -335,6 +335,7 @@
             overflow: hidden;
             margin-top: 40px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
         }
 
         .resume-builder-header {
@@ -356,6 +357,8 @@
 
         .resume-builder-content {
             padding: 25px;
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .close-resume-builder {
@@ -368,6 +371,12 @@
             font-size: 1.5rem;
             cursor: pointer;
             transition: color 0.3s ease;
+            z-index: 10;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .close-resume-builder:hover {
@@ -451,6 +460,7 @@
             
             .resume-builder-container {
                 margin: 20px 10px;
+                max-height: 90vh;
             }
             
             .resume-builder-header {
@@ -459,6 +469,12 @@
             
             .resume-builder-content {
                 padding: 20px;
+                max-height: 70vh;
+            }
+            
+            .resume-main-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px;
             }
         }
 
@@ -498,6 +514,10 @@
             
             .top-bar {
                 padding: 10px 12px;
+            }
+            
+            .resume-form-panel, .resume-preview-panel {
+                padding: 15px !important;
             }
         }
 
@@ -628,6 +648,8 @@
             border-radius: 12px;
             padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.1);
+            max-height: 600px;
+            overflow-y: auto;
         }
 
         .resume-preview-panel {
@@ -669,7 +691,8 @@
         }
 
         .resume-form-group input,
-        .resume-form-group textarea {
+        .resume-form-group textarea,
+        .resume-form-group select {
             width: 100%;
             padding: 12px;
             background: #1a1a1a;
@@ -681,7 +704,8 @@
         }
 
         .resume-form-group input:focus,
-        .resume-form-group textarea:focus {
+        .resume-form-group textarea:focus,
+        .resume-form-group select:focus {
             outline: none;
             border-color: #4CAF50;
         }
@@ -713,6 +737,8 @@
             font-weight: 500;
             cursor: pointer;
             transition: background 0.3s ease;
+            min-width: 100px;
+            text-align: center;
         }
 
         .resume-nav-btn:hover {
@@ -770,6 +796,18 @@
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resume-upload-btn input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
         }
 
         .resume-remove-btn {
@@ -800,10 +838,49 @@
             font-weight: 500;
             cursor: pointer;
             margin-top: 10px;
+            width: 100%;
+            justify-content: center;
         }
 
         .resume-add-btn:hover {
             background: #444;
+        }
+
+        .resume-remove-item-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #ff4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .resume-item-container {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        .resume-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .resume-item-title {
+            font-weight: 600;
+            color: #fff;
+            font-size: 1.1rem;
         }
 
         /* Resume Preview Styles */
@@ -815,6 +892,7 @@
             background: white;
             padding: 30px;
             border-radius: 8px;
+            min-height: 500px;
         }
 
         .resume-preview-header {
@@ -928,6 +1006,7 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            flex-direction: column;
         }
 
         .loading-spinner {
@@ -937,7 +1016,79 @@
             border-radius: 50%;
             border-top-color: white;
             animation: spin 1s linear infinite;
-            margin: 0 auto 20px;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Progress dots */
+        .resume-progress {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .resume-progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            transition: background 0.3s ease;
+        }
+
+        .resume-progress-dot.active {
+            background: #4CAF50;
+        }
+
+        /* Skill input with tags */
+        .skills-input-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+            min-height: 40px;
+            padding: 10px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .skill-tag-input {
+            background: #333;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .skill-tag-input .remove-skill {
+            cursor: pointer;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .skill-tag-input .remove-skill:hover {
+            opacity: 1;
+        }
+
+        #skillInput {
+            flex: 1;
+            min-width: 100px;
+            border: none;
+            background: transparent;
+            color: white;
+            padding: 5px;
+            font-size: 0.9rem;
+        }
+
+        #skillInput:focus {
+            outline: none;
         }
 
         /* Smooth scroll behavior */
@@ -971,6 +1122,33 @@
         body {
             overflow-x: hidden;
             width: 100%;
+        }
+
+        /* Custom scrollbar */
+        .resume-form-panel::-webkit-scrollbar,
+        .resume-preview-panel::-webkit-scrollbar,
+        .resume-builder-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .resume-form-panel::-webkit-scrollbar-track,
+        .resume-preview-panel::-webkit-scrollbar-track,
+        .resume-builder-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        .resume-form-panel::-webkit-scrollbar-thumb,
+        .resume-preview-panel::-webkit-scrollbar-thumb,
+        .resume-builder-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        .resume-form-panel::-webkit-scrollbar-thumb:hover,
+        .resume-preview-panel::-webkit-scrollbar-thumb:hover,
+        .resume-builder-content::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
@@ -1069,6 +1247,14 @@
             <div class="resume-builder-header">
                 <h2>Resume Builder</h2>
                 <p>Create a professional ATS-friendly resume in minutes. Fill in your details and download as PDF.</p>
+                
+                <!-- Progress dots -->
+                <div class="resume-progress" id="resumeProgress">
+                    <div class="resume-progress-dot active" data-section="0"></div>
+                    <div class="resume-progress-dot" data-section="1"></div>
+                    <div class="resume-progress-dot" data-section="2"></div>
+                    <div class="resume-progress-dot" data-section="3"></div>
+                </div>
             </div>
             
             <div class="resume-builder-content">
@@ -1084,11 +1270,11 @@
                                     <i class="fas fa-user"></i>
                                 </div>
                                 <div>
-                                    <label class="resume-upload-btn">
+                                    <button class="resume-upload-btn">
                                         <i class="fas fa-camera"></i>
                                         Upload Photo
-                                        <input type="file" id="resumePictureUpload" accept="image/*" style="display: none;">
-                                    </label>
+                                        <input type="file" id="resumePictureUpload" accept="image/*">
+                                    </button>
                                     <button class="resume-remove-btn" id="resumeRemovePicture" style="display: none;">
                                         <i class="fas fa-times"></i>
                                         Remove
@@ -1132,31 +1318,7 @@
                         <div class="resume-section" id="resumeExperienceSection">
                             <h3 class="resume-section-title">Work Experience</h3>
                             <div id="resumeExperienceContainer">
-                                <div class="resume-form-group">
-                                    <label for="resumeJobTitle1">Job Title</label>
-                                    <input type="text" id="resumeJobTitle1" value="Senior Software Engineer">
-                                </div>
-                                <div class="resume-form-group">
-                                    <label for="resumeCompany1">Company</label>
-                                    <input type="text" id="resumeCompany1" value="Amazon Web Services">
-                                </div>
-                                <div class="resume-form-row">
-                                    <div class="resume-form-group">
-                                        <label for="resumeStartDate1">Start Date</label>
-                                        <input type="text" id="resumeStartDate1" value="June 2019">
-                                    </div>
-                                    <div class="resume-form-group">
-                                        <label for="resumeEndDate1">End Date</label>
-                                        <input type="text" id="resumeEndDate1" value="Present">
-                                    </div>
-                                </div>
-                                <div class="resume-form-group">
-                                    <label for="resumeDescription1">Responsibilities & Achievements</label>
-                                    <textarea id="resumeDescription1" rows="4">• Led a team of 6 developers in designing microservices architecture
-• Improved system performance by 40% through optimization
-• Reduced deployment time by 60% with CI/CD pipeline
-• Mentored 3 junior developers, improving team productivity by 25%</textarea>
-                                </div>
+                                <!-- Experience items will be added here -->
                             </div>
                             <button class="resume-add-btn" id="resumeAddExperience">
                                 <i class="fas fa-plus"></i>
@@ -1167,24 +1329,7 @@
                         <div class="resume-section" id="resumeEducationSection">
                             <h3 class="resume-section-title">Education</h3>
                             <div id="resumeEducationContainer">
-                                <div class="resume-form-group">
-                                    <label for="resumeDegree1">Degree</label>
-                                    <input type="text" id="resumeDegree1" value="Master of Science in Computer Science">
-                                </div>
-                                <div class="resume-form-group">
-                                    <label for="resumeInstitution1">Institution</label>
-                                    <input type="text" id="resumeInstitution1" value="University of Washington">
-                                </div>
-                                <div class="resume-form-row">
-                                    <div class="resume-form-group">
-                                        <label for="resumeGradYear1">Graduation Year</label>
-                                        <input type="text" id="resumeGradYear1" value="2015">
-                                    </div>
-                                    <div class="resume-form-group">
-                                        <label for="resumeGpa1">GPA</label>
-                                        <input type="text" id="resumeGpa1" value="3.8">
-                                    </div>
-                                </div>
+                                <!-- Education items will be added here -->
                             </div>
                             <button class="resume-add-btn" id="resumeAddEducation">
                                 <i class="fas fa-plus"></i>
@@ -1194,17 +1339,23 @@
 
                         <div class="resume-section" id="resumeSkillsSection">
                             <h3 class="resume-section-title">Skills</h3>
+                            
                             <div class="resume-form-group">
-                                <label for="resumeSkills">Technical Skills</label>
-                                <input type="text" id="resumeSkills" value="Java, Python, JavaScript, React, AWS, Docker, Kubernetes, PostgreSQL, Git, Agile Methodologies">
+                                <label>Technical Skills (Add skills by typing and pressing Enter)</label>
+                                <div class="skills-input-container">
+                                    <input type="text" id="skillInput" placeholder="Type a skill and press Enter">
+                                </div>
+                                <div id="skillsTagsContainer"></div>
                             </div>
+                            
                             <div class="resume-form-group">
                                 <label for="resumeLanguages">Languages</label>
-                                <input type="text" id="resumeLanguages" value="English (Native), Mandarin (Fluent), Spanish (Conversational)">
+                                <input type="text" id="resumeLanguages" value="English (Native), Mandarin (Fluent), Spanish (Conversational)" placeholder="e.g., English (Native), Spanish (Intermediate)">
                             </div>
+                            
                             <div class="resume-form-group">
                                 <label for="resumeCertifications">Certifications</label>
-                                <input type="text" id="resumeCertifications" value="AWS Certified Solutions Architect, Google Cloud Professional Data Engineer">
+                                <input type="text" id="resumeCertifications" value="AWS Certified Solutions Architect, Google Cloud Professional Data Engineer" placeholder="e.g., AWS Certified, PMP Certification">
                             </div>
                         </div>
 
@@ -1216,7 +1367,7 @@
 
                     <!-- Preview Panel -->
                     <div class="resume-preview-panel">
-                        <h3 class="resume-section-title">Preview</h3>
+                        <h3 class="resume-section-title">Live Preview</h3>
                         <div class="resume-preview-content" id="resumePreview">
                             <!-- Preview will be generated here -->
                         </div>
@@ -1261,6 +1412,501 @@
     </div>
     
     <script>
+        // Resume Builder Data
+        const resumeData = {
+            profile: {
+                name: "Alexandra Chen",
+                title: "Senior Software Engineer",
+                location: "San Francisco, CA",
+                email: "alex.chen@example.com",
+                phone: "(415) 123-4567",
+                summary: "Senior Software Engineer with 8+ years of experience designing and implementing scalable software solutions. Proven track record of leading cross-functional teams to deliver high-quality products.",
+                avatar: null
+            },
+            experiences: [
+                {
+                    id: 1,
+                    title: "Senior Software Engineer",
+                    company: "Amazon Web Services",
+                    startDate: "June 2019",
+                    endDate: "Present",
+                    description: "• Led a team of 6 developers in designing microservices architecture\n• Improved system performance by 40% through optimization\n• Reduced deployment time by 60% with CI/CD pipeline\n• Mentored 3 junior developers, improving team productivity by 25%"
+                }
+            ],
+            education: [
+                {
+                    id: 1,
+                    degree: "Master of Science in Computer Science",
+                    institution: "University of Washington",
+                    graduationYear: "2015",
+                    gpa: "3.8"
+                }
+            ],
+            skills: ["Java", "Python", "JavaScript", "React", "AWS", "Docker", "Kubernetes", "PostgreSQL", "Git", "Agile Methodologies"],
+            languages: "English (Native), Mandarin (Fluent), Spanish (Conversational)",
+            certifications: "AWS Certified Solutions Architect, Google Cloud Professional Data Engineer"
+        };
+
+        // DOM Elements
+        const resumeBuilder = document.getElementById('resumeBuilder');
+        const openResumeBuilderBtn = document.getElementById('openResumeBuilder');
+        const closeResumeBuilderBtn = document.getElementById('closeResumeBuilder');
+        const resumeSections = document.querySelectorAll('.resume-section');
+        const resumePrevBtn = document.getElementById('resumePrevBtn');
+        const resumeNextBtn = document.getElementById('resumeNextBtn');
+        const progressDots = document.querySelectorAll('.resume-progress-dot');
+        let currentResumeSection = 0;
+
+        // Initialize the resume builder
+        function initResumeBuilder() {
+            // Load data into form
+            document.getElementById('resumeFullName').value = resumeData.profile.name;
+            document.getElementById('resumeJobTitle').value = resumeData.profile.title;
+            document.getElementById('resumeLocation').value = resumeData.profile.location;
+            document.getElementById('resumeEmail').value = resumeData.profile.email;
+            document.getElementById('resumePhone').value = resumeData.profile.phone;
+            document.getElementById('resumeSummary').value = resumeData.profile.summary;
+            document.getElementById('resumeLanguages').value = resumeData.languages;
+            document.getElementById('resumeCertifications').value = resumeData.certifications;
+            
+            // Load skills
+            resumeData.skills.forEach(skill => {
+                addSkillTag(skill);
+            });
+            
+            // Load experiences
+            renderExperiences();
+            
+            // Load education
+            renderEducation();
+            
+            // Update preview
+            updateResumePreview();
+        }
+
+        // Add skill tag
+        function addSkillTag(skillText) {
+            if (!skillText.trim()) return;
+            
+            const tag = document.createElement('div');
+            tag.className = 'skill-tag-input';
+            tag.innerHTML = `
+                ${skillText}
+                <span class="remove-skill" onclick="removeSkill('${skillText}')">&times;</span>
+            `;
+            
+            document.getElementById('skillsTagsContainer').appendChild(tag);
+            
+            // Add to data if not already present
+            if (!resumeData.skills.includes(skillText)) {
+                resumeData.skills.push(skillText);
+            }
+            
+            updateResumePreview();
+        }
+
+        // Remove skill tag
+        function removeSkill(skillText) {
+            resumeData.skills = resumeData.skills.filter(skill => skill !== skillText);
+            renderSkills();
+            updateResumePreview();
+        }
+
+        // Render skills in form
+        function renderSkills() {
+            const container = document.getElementById('skillsTagsContainer');
+            container.innerHTML = '';
+            resumeData.skills.forEach(skill => {
+                addSkillTag(skill);
+            });
+        }
+
+        // Add experience item
+        function addExperience() {
+            const newId = resumeData.experiences.length + 1;
+            resumeData.experiences.push({
+                id: newId,
+                title: "Software Developer",
+                company: "Company Name",
+                startDate: "Month Year",
+                endDate: "Present",
+                description: "• Describe your responsibilities\n• Highlight achievements\n• Use bullet points"
+            });
+            renderExperiences();
+            updateResumePreview();
+        }
+
+        // Render experiences in form
+        function renderExperiences() {
+            const container = document.getElementById('resumeExperienceContainer');
+            container.innerHTML = '';
+            
+            resumeData.experiences.forEach((exp, index) => {
+                const expElement = document.createElement('div');
+                expElement.className = 'resume-item-container';
+                expElement.innerHTML = `
+                    <div class="resume-item-header">
+                        <div class="resume-item-title">Experience #${index + 1}</div>
+                        ${index > 0 ? `<button class="resume-remove-item-btn" onclick="removeExperience(${exp.id})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>` : ''}
+                    </div>
+                    <div class="resume-form-group">
+                        <label for="expTitle${exp.id}">Job Title</label>
+                        <input type="text" id="expTitle${exp.id}" value="${exp.title}" 
+                               oninput="updateExperience(${exp.id}, 'title', this.value)">
+                    </div>
+                    <div class="resume-form-group">
+                        <label for="expCompany${exp.id}">Company</label>
+                        <input type="text" id="expCompany${exp.id}" value="${exp.company}" 
+                               oninput="updateExperience(${exp.id}, 'company', this.value)">
+                    </div>
+                    <div class="resume-form-row">
+                        <div class="resume-form-group">
+                            <label for="expStart${exp.id}">Start Date</label>
+                            <input type="text" id="expStart${exp.id}" value="${exp.startDate}" 
+                                   oninput="updateExperience(${exp.id}, 'startDate', this.value)">
+                        </div>
+                        <div class="resume-form-group">
+                            <label for="expEnd${exp.id}">End Date</label>
+                            <input type="text" id="expEnd${exp.id}" value="${exp.endDate}" 
+                                   oninput="updateExperience(${exp.id}, 'endDate', this.value)">
+                        </div>
+                    </div>
+                    <div class="resume-form-group">
+                        <label for="expDesc${exp.id}">Responsibilities & Achievements</label>
+                        <textarea id="expDesc${exp.id}" rows="4" 
+                                  oninput="updateExperience(${exp.id}, 'description', this.value)">${exp.description}</textarea>
+                    </div>
+                `;
+                container.appendChild(expElement);
+            });
+        }
+
+        // Update experience data
+        function updateExperience(id, field, value) {
+            const exp = resumeData.experiences.find(e => e.id === id);
+            if (exp) {
+                exp[field] = value;
+                updateResumePreview();
+            }
+        }
+
+        // Remove experience
+        function removeExperience(id) {
+            if (resumeData.experiences.length > 1) {
+                resumeData.experiences = resumeData.experiences.filter(exp => exp.id !== id);
+                renderExperiences();
+                updateResumePreview();
+            } else {
+                alert("You need to have at least one experience entry.");
+            }
+        }
+
+        // Add education item
+        function addEducation() {
+            const newId = resumeData.education.length + 1;
+            resumeData.education.push({
+                id: newId,
+                degree: "Bachelor's Degree",
+                institution: "University Name",
+                graduationYear: "Year",
+                gpa: "GPA"
+            });
+            renderEducation();
+            updateResumePreview();
+        }
+
+        // Render education in form
+        function renderEducation() {
+            const container = document.getElementById('resumeEducationContainer');
+            container.innerHTML = '';
+            
+            resumeData.education.forEach((edu, index) => {
+                const eduElement = document.createElement('div');
+                eduElement.className = 'resume-item-container';
+                eduElement.innerHTML = `
+                    <div class="resume-item-header">
+                        <div class="resume-item-title">Education #${index + 1}</div>
+                        ${index > 0 ? `<button class="resume-remove-item-btn" onclick="removeEducation(${edu.id})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>` : ''}
+                    </div>
+                    <div class="resume-form-group">
+                        <label for="eduDegree${edu.id}">Degree</label>
+                        <input type="text" id="eduDegree${edu.id}" value="${edu.degree}" 
+                               oninput="updateEducation(${edu.id}, 'degree', this.value)">
+                    </div>
+                    <div class="resume-form-group">
+                        <label for="eduInstitution${edu.id}">Institution</label>
+                        <input type="text" id="eduInstitution${edu.id}" value="${edu.institution}" 
+                               oninput="updateEducation(${edu.id}, 'institution', this.value)">
+                    </div>
+                    <div class="resume-form-row">
+                        <div class="resume-form-group">
+                            <label for="eduYear${edu.id}">Graduation Year</label>
+                            <input type="text" id="eduYear${edu.id}" value="${edu.graduationYear}" 
+                                   oninput="updateEducation(${edu.id}, 'graduationYear', this.value)">
+                        </div>
+                        <div class="resume-form-group">
+                            <label for="eduGpa${edu.id}">GPA</label>
+                            <input type="text" id="eduGpa${edu.id}" value="${edu.gpa}" 
+                                   oninput="updateEducation(${edu.id}, 'gpa', this.value)">
+                        </div>
+                    </div>
+                `;
+                container.appendChild(eduElement);
+            });
+        }
+
+        // Update education data
+        function updateEducation(id, field, value) {
+            const edu = resumeData.education.find(e => e.id === id);
+            if (edu) {
+                edu[field] = value;
+                updateResumePreview();
+            }
+        }
+
+        // Remove education
+        function removeEducation(id) {
+            if (resumeData.education.length > 1) {
+                resumeData.education = resumeData.education.filter(edu => edu.id !== id);
+                renderEducation();
+                updateResumePreview();
+            } else {
+                alert("You need to have at least one education entry.");
+            }
+        }
+
+        // Update resume preview
+        function updateResumePreview() {
+            // Update profile data from form inputs
+            resumeData.profile.name = document.getElementById('resumeFullName').value;
+            resumeData.profile.title = document.getElementById('resumeJobTitle').value;
+            resumeData.profile.location = document.getElementById('resumeLocation').value;
+            resumeData.profile.email = document.getElementById('resumeEmail').value;
+            resumeData.profile.phone = document.getElementById('resumePhone').value;
+            resumeData.profile.summary = document.getElementById('resumeSummary').value;
+            resumeData.languages = document.getElementById('resumeLanguages').value;
+            resumeData.certifications = document.getElementById('resumeCertifications').value;
+            
+            // Build preview HTML
+            let previewHTML = `
+                <div class="resume-preview-header">
+                    ${resumeData.profile.avatar ? `<img src="${resumeData.profile.avatar}" class="resume-preview-avatar" alt="Profile">` : ''}
+                    <div>
+                        <h1 class="resume-preview-name">${resumeData.profile.name}</h1>
+                        <div class="resume-preview-title">${resumeData.profile.title}</div>
+                        <div class="resume-preview-contact">
+                            <div>${resumeData.profile.location}</div>
+                            <div>${resumeData.profile.email}</div>
+                            <div>${resumeData.profile.phone}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="resume-preview-section">
+                    <h3 class="resume-preview-section-title">Summary</h3>
+                    <p>${resumeData.profile.summary}</p>
+                </div>
+                
+                <div class="resume-preview-section">
+                    <h3 class="resume-preview-section-title">Experience</h3>
+            `;
+            
+            resumeData.experiences.forEach(exp => {
+                previewHTML += `
+                    <div class="resume-preview-item">
+                        <div class="resume-preview-item-header">
+                            <div class="resume-preview-item-title">${exp.title}</div>
+                            <div class="resume-preview-item-date">${exp.startDate} – ${exp.endDate}</div>
+                        </div>
+                        <div class="resume-preview-item-subtitle">${exp.company}</div>
+                        <p>${exp.description.replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
+            });
+            
+            previewHTML += `
+                </div>
+                
+                <div class="resume-preview-section">
+                    <h3 class="resume-preview-section-title">Education</h3>
+            `;
+            
+            resumeData.education.forEach(edu => {
+                previewHTML += `
+                    <div class="resume-preview-item">
+                        <div class="resume-preview-item-header">
+                            <div class="resume-preview-item-title">${edu.degree}</div>
+                            <div class="resume-preview-item-date">${edu.graduationYear}</div>
+                        </div>
+                        <div class="resume-preview-item-subtitle">${edu.institution}${edu.gpa ? ` | GPA: ${edu.gpa}` : ''}</div>
+                    </div>
+                `;
+            });
+            
+            previewHTML += `
+                </div>
+                
+                <div class="resume-preview-section">
+                    <h3 class="resume-preview-section-title">Skills</h3>
+                    <div class="resume-preview-skills">
+                        ${resumeData.skills.map(skill => `<span class="resume-preview-skill-tag">${skill}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            
+            if (resumeData.languages) {
+                previewHTML += `
+                    <div class="resume-preview-section">
+                        <h3 class="resume-preview-section-title">Languages</h3>
+                        <p>${resumeData.languages}</p>
+                    </div>
+                `;
+            }
+            
+            if (resumeData.certifications) {
+                previewHTML += `
+                    <div class="resume-preview-section">
+                        <h3 class="resume-preview-section-title">Certifications</h3>
+                        <p>${resumeData.certifications}</p>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('resumePreview').innerHTML = previewHTML;
+        }
+
+        // Update resume progress
+        function updateResumeProgress() {
+            // Hide all sections
+            resumeSections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show current section
+            resumeSections[currentResumeSection].classList.add('active');
+            
+            // Update progress dots
+            progressDots.forEach((dot, index) => {
+                if (index === currentResumeSection) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+            
+            // Update navigation buttons
+            resumePrevBtn.style.display = currentResumeSection === 0 ? 'none' : 'block';
+            
+            if (currentResumeSection === resumeSections.length - 1) {
+                resumeNextBtn.style.display = 'none';
+                updateResumePreview();
+            } else {
+                resumeNextBtn.textContent = 'Next';
+                resumeNextBtn.style.display = 'block';
+            }
+            
+            // Scroll to top of form panel
+            document.querySelector('.resume-form-panel').scrollTop = 0;
+        }
+
+        // Resume navigation
+        function resumeNextSection() {
+            if (currentResumeSection < resumeSections.length - 1) {
+                currentResumeSection++;
+                updateResumeProgress();
+            }
+        }
+
+        function resumePrevSection() {
+            if (currentResumeSection > 0) {
+                currentResumeSection--;
+                updateResumeProgress();
+            }
+        }
+
+        // Export PDF
+        document.getElementById('resumeExportPDF').addEventListener('click', function() {
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            const element = document.getElementById('resumePreview');
+            const clone = element.cloneNode(true);
+            
+            // Add print styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @media print {
+                    body * {
+                        visibility: hidden;
+                    }
+                    #resumePreview, #resumePreview * {
+                        visibility: visible;
+                    }
+                    #resumePreview {
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                    }
+                }
+            `;
+            clone.appendChild(style);
+            
+            const opt = {
+                margin: [15, 15, 15, 15],
+                filename: 'resume.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    scrollY: 0
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'portrait' 
+                }
+            };
+            
+            setTimeout(() => {
+                html2pdf().set(opt).from(clone).save().then(() => {
+                    loadingOverlay.style.display = 'none';
+                }).catch(err => {
+                    console.error(err);
+                    loadingOverlay.style.display = 'none';
+                    alert('Failed to generate PDF. Please try printing instead.');
+                });
+            }, 500);
+        });
+
+        // Print resume
+        document.getElementById('resumeExportPrint').addEventListener('click', function() {
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Resume - Print</title>
+                    <style>
+                        body { font-family: 'Times New Roman', Times, serif; margin: 0; padding: 20px; }
+                        .resume-preview-content { max-width: 800px; margin: 0 auto; }
+                    </style>
+                </head>
+                <body>
+                    ${document.getElementById('resumePreview').innerHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            printWindow.print();
+        });
+
         // Typing animation for tagline
         const taglineText = "Your friendly neighborhood IT guy";
         const typedTextElement = document.getElementById('typed-text');
@@ -1272,34 +1918,25 @@
             typedTextElement.textContent = currentText;
             
             if (!isDeleting && charIndex < taglineText.length) {
-                // Typing forward
                 charIndex++;
                 setTimeout(typeText, 100);
             } else if (isDeleting && charIndex > 0) {
-                // Deleting backward
                 charIndex--;
                 setTimeout(typeText, 50);
             } else if (!isDeleting && charIndex === taglineText.length) {
-                // Pause at the end, then start deleting
                 setTimeout(() => {
                     isDeleting = true;
                     setTimeout(typeText, 1500);
                 }, 2000);
             } else if (isDeleting && charIndex === 0) {
-                // Restart typing
                 isDeleting = false;
                 setTimeout(typeText, 500);
             }
         }
         
-        // Initialize typing animation
-        setTimeout(typeText, 1000);
-        
         // Function to update Malaysia Time with seconds
         function updateMalaysiaTime() {
             const now = new Date();
-            
-            // Convert to Malaysia Time (GMT+8)
             const options = {
                 timeZone: 'Asia/Kuala_Lumpur',
                 hour12: true,
@@ -1310,7 +1947,6 @@
             
             const timeStr = now.toLocaleTimeString('en-MY', options);
             
-            // Update both desktop and mobile times
             const desktopTime = document.getElementById('top-time-desktop');
             const mobileTime = document.getElementById('top-time-mobile');
             
@@ -1321,10 +1957,6 @@
                 mobileTime.querySelector('span').textContent = timeStr;
             }
         }
-        
-        // Update time immediately and then every second
-        updateMalaysiaTime();
-        setInterval(updateMalaysiaTime, 1000);
         
         // Scroll to top functionality
         const scrollTopBtn = document.getElementById('scrollTop');
@@ -1344,7 +1976,7 @@
             });
         });
         
-        // Mobile-specific optimizations
+        // Mobile detection
         function detectMobile() {
             return window.innerWidth <= 768;
         }
@@ -1352,255 +1984,36 @@
         // Handle mobile layout adjustments
         function handleMobileLayout() {
             if (detectMobile()) {
-                // Hide desktop status/location containers on mobile
                 document.querySelectorAll('.desktop-only').forEach(el => {
                     el.style.display = 'none';
                 });
-                // Show mobile top bar
                 document.querySelector('.top-bar').style.display = 'flex';
             } else {
-                // Show desktop containers on larger screens
                 document.querySelectorAll('.desktop-only').forEach(el => {
                     el.style.display = 'flex';
                 });
-                // Hide mobile top bar
                 document.querySelector('.top-bar').style.display = 'none';
             }
         }
         
-        // Resume Builder Functionality
-        const resumeBuilder = document.getElementById('resumeBuilder');
-        const openResumeBuilderBtn = document.getElementById('openResumeBuilder');
-        const closeResumeBuilderBtn = document.getElementById('closeResumeBuilder');
-        
-        // Resume sections and navigation
-        const resumeSections = document.querySelectorAll('.resume-section');
-        const resumePrevBtn = document.getElementById('resumePrevBtn');
-        const resumeNextBtn = document.getElementById('resumeNextBtn');
-        let currentResumeSection = 0;
-        
-        // Resume data
-        let resumeProfilePictureData = null;
-        
-        // Update resume progress
-        function updateResumeProgress() {
-            // Hide all sections
-            resumeSections.forEach(section => {
-                section.classList.remove('active');
-            });
-            
-            // Show current section
-            resumeSections[currentResumeSection].classList.add('active');
-            
-            // Update navigation buttons
-            resumePrevBtn.style.display = currentResumeSection === 0 ? 'none' : 'block';
-            
-            if (currentResumeSection === resumeSections.length - 1) {
-                resumeNextBtn.style.display = 'none';
-                updateResumePreview();
-            } else {
-                resumeNextBtn.textContent = 'Next';
-                resumeNextBtn.style.display = 'block';
-            }
-        }
-        
-        // Resume navigation
-        function resumeNextSection() {
-            if (currentResumeSection < resumeSections.length - 1) {
-                currentResumeSection++;
-                updateResumeProgress();
-            }
-        }
-        
-        function resumePrevSection() {
-            if (currentResumeSection > 0) {
-                currentResumeSection--;
-                updateResumeProgress();
-            }
-        }
-        
-        // Resume picture upload
-        document.getElementById('resumePictureUpload').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            if (!file.type.match('image.*')) {
-                alert('Please select an image file');
-                return;
-            }
-            
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                resumeProfilePictureData = e.target.result;
-                document.getElementById('resumeProfilePicture').innerHTML = `<img src="${resumeProfilePictureData}" alt="Profile Picture">`;
-                document.getElementById('resumeRemovePicture').style.display = 'inline-block';
-                updateResumePreview();
-            };
-            reader.readAsDataURL(file);
-        });
-        
-        document.getElementById('resumeRemovePicture').addEventListener('click', function() {
-            resumeProfilePictureData = null;
-            document.getElementById('resumeProfilePicture').innerHTML = '<i class="fas fa-user"></i>';
-            this.style.display = 'none';
-            document.getElementById('resumePictureUpload').value = '';
-            updateResumePreview();
-        });
-        
-        // Update resume preview
-        function updateResumePreview() {
-            const fullName = document.getElementById('resumeFullName').value || 'Your Name';
-            const jobTitle = document.getElementById('resumeJobTitle').value || 'Professional Title';
-            const location = document.getElementById('resumeLocation').value || 'City, State';
-            const email = document.getElementById('resumeEmail').value || 'email@example.com';
-            const phone = document.getElementById('resumePhone').value || '(123) 456-7890';
-            const summary = document.getElementById('resumeSummary').value || 'Professional summary...';
-            
-            const skills = document.getElementById('resumeSkills').value || '';
-            const languages = document.getElementById('resumeLanguages').value || '';
-            const certifications = document.getElementById('resumeCertifications').value || '';
-            
-            // Build preview HTML
-            let previewHTML = `
-                <div class="resume-preview-header">
-                    ${resumeProfilePictureData ? `<img src="${resumeProfilePictureData}" class="resume-preview-avatar" alt="Profile">` : ''}
-                    <div>
-                        <h1 class="resume-preview-name">${fullName}</h1>
-                        <div class="resume-preview-title">${jobTitle}</div>
-                        <div class="resume-preview-contact">
-                            <div>${location}</div>
-                            <div>${email}</div>
-                            <div>${phone}</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="resume-preview-section">
-                    <h3 class="resume-preview-section-title">Summary</h3>
-                    <p>${summary}</p>
-                </div>
-                
-                <div class="resume-preview-section">
-                    <h3 class="resume-preview-section-title">Experience</h3>
-                    <div class="resume-preview-item">
-                        <div class="resume-preview-item-header">
-                            <div class="resume-preview-item-title">${document.getElementById('resumeJobTitle1').value || 'Job Title'}</div>
-                            <div class="resume-preview-item-date">${document.getElementById('resumeStartDate1').value || 'Start'} – ${document.getElementById('resumeEndDate1').value || 'Present'}</div>
-                        </div>
-                        <div class="resume-preview-item-subtitle">${document.getElementById('resumeCompany1').value || 'Company'}</div>
-                        <p>${document.getElementById('resumeDescription1').value.replace(/\n/g, '<br>')}</p>
-                    </div>
-                </div>
-                
-                <div class="resume-preview-section">
-                    <h3 class="resume-preview-section-title">Education</h3>
-                    <div class="resume-preview-item">
-                        <div class="resume-preview-item-header">
-                            <div class="resume-preview-item-title">${document.getElementById('resumeDegree1').value || 'Degree'}</div>
-                            <div class="resume-preview-item-date">${document.getElementById('resumeGradYear1').value || 'Year'}</div>
-                        </div>
-                        <div class="resume-preview-item-subtitle">${document.getElementById('resumeInstitution1').value || 'Institution'}${document.getElementById('resumeGpa1').value ? ` | GPA: ${document.getElementById('resumeGpa1').value}` : ''}</div>
-                    </div>
-                </div>
-            `;
-            
-            if (skills) {
-                previewHTML += `
-                    <div class="resume-preview-section">
-                        <h3 class="resume-preview-section-title">Skills</h3>
-                        <div class="resume-preview-skills">
-                            ${skills.split(',').map(skill => `<span class="resume-preview-skill-tag">${skill.trim()}</span>`).join('')}
-                        </div>
-                    </div>
-                `;
-            }
-            
-            if (languages) {
-                previewHTML += `
-                    <div class="resume-preview-section">
-                        <h3 class="resume-preview-section-title">Languages</h3>
-                        <p>${languages}</p>
-                    </div>
-                `;
-            }
-            
-            if (certifications) {
-                previewHTML += `
-                    <div class="resume-preview-section">
-                        <h3 class="resume-preview-section-title">Certifications</h3>
-                        <p>${certifications}</p>
-                    </div>
-                `;
-            }
-            
-            document.getElementById('resumePreview').innerHTML = previewHTML;
-        }
-        
-        // Export PDF
-        document.getElementById('resumeExportPDF').addEventListener('click', function() {
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.style.display = 'flex';
-            
-            const element = document.getElementById('resumePreview');
-            const clone = element.cloneNode(true);
-            
-            const opt = {
-                margin: [10, 10, 10, 10],
-                filename: 'resume.pdf',
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { 
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#ffffff'
-                },
-                jsPDF: { 
-                    unit: 'mm', 
-                    format: 'a4', 
-                    orientation: 'portrait' 
-                }
-            };
-            
-            setTimeout(() => {
-                html2pdf().set(opt).from(clone).save().then(() => {
-                    loadingOverlay.style.display = 'none';
-                }).catch(err => {
-                    console.error(err);
-                    loadingOverlay.style.display = 'none';
-                    alert('Failed to generate PDF. Please try printing instead.');
-                });
-            }, 500);
-        });
-        
-        // Print resume
-        document.getElementById('resumeExportPrint').addEventListener('click', function() {
-            window.print();
-        });
-        
-        // Add experience/education
-        document.getElementById('resumeAddExperience').addEventListener('click', function() {
-            alert('Add experience functionality would go here');
-        });
-        
-        document.getElementById('resumeAddEducation').addEventListener('click', function() {
-            alert('Add education functionality would go here');
-        });
-        
-        // Input event listeners for real-time preview updates
-        document.querySelectorAll('#resumePersonalSection input, #resumePersonalSection textarea, #resumeExperienceSection input, #resumeExperienceSection textarea, #resumeEducationSection input, #resumeSkillsSection input').forEach(input => {
-            input.addEventListener('input', updateResumePreview);
-        });
-        
         // Initialize on page load
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize typing animation
+            setTimeout(typeText, 1000);
+            
+            // Update time
+            updateMalaysiaTime();
+            setInterval(updateMalaysiaTime, 1000);
+            
             // Handle mobile/desktop layout
             handleMobileLayout();
             window.addEventListener('resize', handleMobileLayout);
             
             // Initialize resume builder
+            initResumeBuilder();
             updateResumeProgress();
-            updateResumePreview();
             
-            // Add subtle fade-in effect to main content
+            // Add fade-in effect
             const container = document.querySelector('.container');
             container.style.opacity = '0';
             container.style.transform = 'translateY(20px)';
@@ -1615,14 +2028,19 @@
             resumePrevBtn.addEventListener('click', resumePrevSection);
             resumeNextBtn.addEventListener('click', resumeNextSection);
             
+            // Open resume builder
             openResumeBuilderBtn.addEventListener('click', function() {
                 resumeBuilder.style.display = 'block';
                 window.scrollTo({
                     top: resumeBuilder.offsetTop - 20,
                     behavior: 'smooth'
                 });
+                // Reset to first section when opening
+                currentResumeSection = 0;
+                updateResumeProgress();
             });
             
+            // Close resume builder
             closeResumeBuilderBtn.addEventListener('click', function() {
                 resumeBuilder.style.display = 'none';
                 window.scrollTo({
@@ -1631,16 +2049,75 @@
                 });
             });
             
+            // Add experience button
+            document.getElementById('resumeAddExperience').addEventListener('click', addExperience);
+            
+            // Add education button
+            document.getElementById('resumeAddEducation').addEventListener('click', addEducation);
+            
+            // Profile picture upload
+            document.getElementById('resumePictureUpload').addEventListener('change', function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.match('image.*')) {
+                    alert('Please select an image file');
+                    return;
+                }
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    resumeData.profile.avatar = e.target.result;
+                    document.getElementById('resumeProfilePicture').innerHTML = `<img src="${resumeData.profile.avatar}" alt="Profile Picture">`;
+                    document.getElementById('resumeRemovePicture').style.display = 'inline-block';
+                    updateResumePreview();
+                };
+                reader.readAsDataURL(file);
+            });
+            
+            // Remove profile picture
+            document.getElementById('resumeRemovePicture').addEventListener('click', function() {
+                resumeData.profile.avatar = null;
+                document.getElementById('resumeProfilePicture').innerHTML = '<i class="fas fa-user"></i>';
+                this.style.display = 'none';
+                document.getElementById('resumePictureUpload').value = '';
+                updateResumePreview();
+            });
+            
+            // Skills input
+            document.getElementById('skillInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const skill = this.value.trim();
+                    if (skill) {
+                        addSkillTag(skill);
+                        this.value = '';
+                    }
+                }
+            });
+            
+            // Input event listeners for real-time updates
+            document.querySelectorAll('#resumePersonalSection input, #resumePersonalSection textarea, #resumeSkillsSection input').forEach(input => {
+                input.addEventListener('input', updateResumePreview);
+            });
+            
+            // Progress dots navigation
+            progressDots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    const sectionIndex = parseInt(this.getAttribute('data-section'));
+                    currentResumeSection = sectionIndex;
+                    updateResumeProgress();
+                });
+            });
+            
             // Improve mobile touch experience
             if (detectMobile()) {
-                // Prevent zoom on double-tap
                 document.addEventListener('touchstart', function(event) {
                     if (event.touches.length > 1) {
                         event.preventDefault();
                     }
                 }, { passive: false });
                 
-                // Improve button responsiveness
                 document.querySelectorAll('a, button, .social-icon, .project-card').forEach(el => {
                     el.addEventListener('touchstart', function() {
                         this.style.transform = 'scale(0.98)';
@@ -1652,12 +2129,15 @@
             }
         });
         
-        // Prevent context menu on mobile for better UX
-        document.addEventListener('contextmenu', function(e) {
-            if (detectMobile()) {
-                e.preventDefault();
-            }
-        });
+        // Make functions globally available for inline event handlers
+        window.addSkillTag = addSkillTag;
+        window.removeSkill = removeSkill;
+        window.addExperience = addExperience;
+        window.updateExperience = updateExperience;
+        window.removeExperience = removeExperience;
+        window.addEducation = addEducation;
+        window.updateEducation = updateEducation;
+        window.removeEducation = removeEducation;
     </script>
 </body>
 </html>
